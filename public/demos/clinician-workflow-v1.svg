@@ -1,0 +1,11 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 500" role="img" aria-label="Flujo sintético de seguimiento profesional">
+  <rect width="800" height="500" fill="#d9f2eb"/>
+  <rect x="55" y="55" width="690" height="390" rx="28" fill="#ffffff"/>
+  <rect x="95" y="100" width="260" height="30" rx="15" fill="#087f6f"/>
+  <rect x="95" y="165" width="225" height="160" rx="16" fill="#edf8f4"/>
+  <rect x="350" y="165" width="355" height="55" rx="16" fill="#e8f6f1"/>
+  <rect x="350" y="245" width="260" height="24" rx="12" fill="#9ed7c9"/>
+  <rect x="350" y="290" width="315" height="24" rx="12" fill="#ccebe2"/>
+  <circle cx="135" cy="215" r="22" fill="#087f6f"/>
+  <text x="95" y="385" fill="#12352f" font-family="system-ui, sans-serif" font-size="24">Seguimiento profesional</text>
+</svg>

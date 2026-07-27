@@ -1,0 +1,138 @@
+:root {
+  --color-ink: #12352f;
+  --color-surface: #f7fbf8;
+  --color-brand: #087f6f;
+  --color-brand-dark: #056356;
+  --color-accent: #d9f2eb;
+  --space-1: 0.75rem;
+  --space-2: 1.25rem;
+  --space-3: 2rem;
+  --space-4: 4rem;
+  --radius: 1rem;
+  --content-width: 70rem;
+  --page-gutter: 2rem;
+  --focus-outline-width: 3px;
+  --focus-outline-offset: 3px;
+  --brand-logo-width: 11rem;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  color: var(--color-ink);
+  background: var(--color-surface);
+  font-family: system-ui, sans-serif;
+  line-height: 1.5;
+}
+
+a {
+  color: inherit;
+}
+
+.site-header,
+main {
+  width: min(100% - var(--page-gutter), var(--content-width));
+  margin-inline: auto;
+}
+
+.site-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-2);
+  min-height: 4.75rem;
+}
+
+.site-header nav {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-2);
+}
+
+.brand {
+  display: inline-flex;
+  align-items: center;
+}
+
+.brand img {
+  width: var(--brand-logo-width);
+  height: auto;
+}
+
+.hero,
+.demo-workflow,
+.consultation {
+  padding-block: var(--space-4);
+}
+
+.hero {
+  max-width: 45rem;
+}
+
+.hero h1 {
+  margin: var(--space-1) 0;
+  font-size: clamp(2.5rem, 7vw, 5rem);
+  line-height: 1;
+}
+
+.hero-copy {
+  font-size: 1.3rem;
+  font-weight: 700;
+}
+
+.eyebrow {
+  color: var(--color-brand-dark);
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.button {
+  display: inline-block;
+  padding: 0.8rem 1.2rem;
+  border-radius: 999px;
+  background: var(--color-brand);
+  color: white;
+  font-weight: 700;
+  text-decoration: none;
+}
+
+.button:hover {
+  background: var(--color-brand-dark);
+}
+
+.demo-workflow {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  align-items: center;
+  gap: var(--space-3);
+}
+
+.demo-workflow img {
+  width: 100%;
+  border-radius: var(--radius);
+  background: var(--color-accent);
+}
+
+a:focus-visible {
+  outline: var(--focus-outline-width) solid var(--color-brand);
+  outline-offset: var(--focus-outline-offset);
+}
+
+@media (max-width: 42rem) {
+  .site-header,
+  .demo-workflow {
+    align-items: flex-start;
+  }
+
+  .site-header {
+    flex-direction: column;
+  }
+
+  .demo-workflow {
+    grid-template-columns: 1fr;
+  }
+}

@@ -1,0 +1,22 @@
+---
+import type { Demo } from '../content/demo';
+
+type Props = {
+  demo?: Demo;
+};
+
+const { demo } = Astro.props;
+---
+
+<section class="demo-workflow" aria-labelledby="demo-title">
+  <div>
+    <p class="eyebrow">Tu criterio, siempre al frente</p>
+    <h2 id="demo-title">Una mirada más clara entre consultas</h2>
+    <p>Visualizá la información relevante para orientar cada conversación sin perder tu rol profesional.</p>
+  </div>
+  {demo ? (
+    <img src={demo.src} alt={demo.alt} loading="lazy" />
+  ) : (
+    <p role="status">La demostración estará disponible pronto.</p>
+  )}
+</section>

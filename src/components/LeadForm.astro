@@ -1,0 +1,57 @@
+---
+import { LEAD_FORM_FIELDS, LEAD_HONEYPOT_FIELD } from '../lib/lead-form-fields';
+---
+<form id="lead-form" action="/api/leads" method="post" novalidate>
+  {LEAD_FORM_FIELDS.map((field) => (
+    <div>
+      <label for={`lead-${field.name}`}>{field.label}</label>
+      <input
+        id={`lead-${field.name}`}
+        name={field.name}
+        type={field.type}
+        autocomplete={field.autocomplete}
+        required
+      />
+    </div>
+  ))}
+  <div aria-hidden="true" hidden>
+    <label for={`lead-${LEAD_HONEYPOT_FIELD.name}`}>{LEAD_HONEYPOT_FIELD.label}</label>
+    <input
+      id={`lead-${LEAD_HONEYPOT_FIELD.name}`}
+      name={LEAD_HONEYPOT_FIELD.name}
+      tabindex="-1"
+      autocomplete={LEAD_HONEYPOT_FIELD.autocomplete}
+    />
+  </div>
+  <p id="lead-feedback" role="status" aria-live="polite"></p>
+  <button type="submit">Enviar consulta</button>
+</form>
+
+<script>
+  const form = document.querySelector<HTMLFormElement>('#lead-form');
+  const feedback = document.querySelector<HTMLElement>('#lead-feedback');
+  const button = form?.querySelector<HTMLButtonElement>('button[type="submit"]');
+
+  form?.addEventListener('submit', async (event) => {
+    event.preventDefault();
+    if (!feedback || !button) return;
+
+    button.disabled = true;
+    feedback.textContent = 'Enviando consulta…';
+    const formData = new FormData(form);
+    const response = await fetch(form.action, {
+      method: 'POST',
+      headers: { 'content-type': 'application/json' },
+      body: JSON.stringify(Object.fromEntries(formData)),
+    }).catch(() => undefined);
+
+    button.disabled = false;
+    if (response?.ok) {
+      form.reset();
+      feedback.textContent = 'Recibimos tu consulta. Te vamos a contactar pronto.';
+      return;
+    }
+
+    feedback.textContent = 'No pudimos enviar tu consulta. Revisá los datos e intentá nuevamente.';
+  });
+</script>

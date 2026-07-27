@@ -1,0 +1,33 @@
+---
+import '../styles/global.css';
+import { createStructuredData } from '../lib/site-metadata';
+
+type Props = {
+  title: string;
+  description: string;
+  canonicalUrl: URL;
+};
+
+const { title, description, canonicalUrl } = Astro.props;
+const structuredData = createStructuredData(canonicalUrl);
+---
+
+<!doctype html>
+<html lang="es-AR">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width" />
+    <title>{title}</title>
+    <meta name="description" content={description} />
+    <link rel="canonical" href={canonicalUrl} />
+    <meta property="og:title" content={title} />
+    <meta property="og:description" content={description} />
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content={canonicalUrl} />
+    <meta name="twitter:card" content="summary" />
+    <script is:inline type="application/ld+json" set:html={JSON.stringify(structuredData)}></script>
+  </head>
+  <body>
+    <slot />
+  </body>
+</html>
