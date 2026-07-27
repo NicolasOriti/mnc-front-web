@@ -18,7 +18,7 @@ const demo = getApprovedDemo(publicEnvironment.whatsAppReady);
   canonicalUrl={publicEnvironment.siteUrl}
 >
   <Header loginUrl={publicEnvironment.loginUrl?.href} />
-  <main>
+  <main id="contenido">
     <section class="hero" aria-labelledby="hero-title">
       <p class="eyebrow">MyNutriCoach para profesionales</p>
       <h1 id="hero-title">Nutricionistas de Argentina</h1>
@@ -28,8 +28,10 @@ const demo = getApprovedDemo(publicEnvironment.whatsAppReady);
     </section>
     <DemoWorkflow demo={demo} />
     <section id="consulta" class="consultation" aria-labelledby="consultation-title">
-      <h2 id="consultation-title">Conozcamos tu práctica</h2>
-      <p>Dejanos tus datos y te contactamos para conversar sobre MyNutriCoach.</p>
+      <div class="consultation__copy">
+        <h2 id="consultation-title">Conozcamos tu práctica</h2>
+        <p>Dejanos tus datos y te contactamos para conversar sobre MyNutriCoach.</p>
+      </div>
       <LeadForm />
     </section>
   </main>

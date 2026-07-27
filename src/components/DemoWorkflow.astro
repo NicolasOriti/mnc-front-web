@@ -9,14 +9,16 @@ const { demo } = Astro.props;
 ---
 
 <section class="demo-workflow" aria-labelledby="demo-title">
-  <div>
+  <div class="demo-workflow__copy">
     <p class="eyebrow">Tu criterio, siempre al frente</p>
     <h2 id="demo-title">Una mirada más clara entre consultas</h2>
     <p>Visualizá la información relevante para orientar cada conversación sin perder tu rol profesional.</p>
   </div>
   {demo ? (
-    <img src={demo.src} alt={demo.alt} loading="lazy" />
+    <figure class="demo-workflow__frame">
+      <img src={demo.src} alt={demo.alt} loading="lazy" decoding="async" />
+    </figure>
   ) : (
-    <p role="status">La demostración estará disponible pronto.</p>
+    <p class="demo-workflow__placeholder" role="status">La demostración estará disponible pronto.</p>
   )}
 </section>

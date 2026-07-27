@@ -7,11 +7,21 @@ const { loginUrl } = Astro.props;
 ---
 
 <header class="site-header">
-  <a class="brand" href="/" aria-label="MyNutriCoach, inicio">
-    <img src="/brand/logo.png" alt="MyNutriCoach" />
-  </a>
-  <nav aria-label="Navegación principal">
-    <a href="#consulta">Solicitar una consulta</a>
-    {loginUrl && <a class="login" href={loginUrl}>Ingresar</a>}
-  </nav>
+  <div class="site-header__inner">
+    <a class="brand" href="/" aria-label="MyNutriCoach, inicio">
+      {/*
+        logo.png is the full square lockup (mark + wordmark + tagline). The tile
+        crops it down to the mark only; the wordmark next to it is live text so
+        it stays crisp at any density. See --brand-mark-* in global.css.
+      */}
+      <span class="brand__mark">
+        <img src="/brand/logo.png" alt="MyNutriCoach" width="1254" height="1254" />
+      </span>
+      <span class="brand__word" aria-hidden="true">My<b>Nutri</b>Coach</span>
+    </a>
+    <nav aria-label="Navegación principal" class="site-nav">
+      <a class="cta" href="#consulta">Solicitar una consulta</a>
+      {loginUrl && <a class="login" href={loginUrl}>Ingresar</a>}
+    </nav>
+  </div>
 </header>

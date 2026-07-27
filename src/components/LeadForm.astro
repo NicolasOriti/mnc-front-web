@@ -1,11 +1,12 @@
 ---
 import { LEAD_FORM_FIELDS, LEAD_HONEYPOT_FIELD } from '../lib/lead-form-fields';
 ---
-<form id="lead-form" action="/api/leads" method="post" novalidate>
+<form id="lead-form" class="lead-form" action="/api/leads" method="post" novalidate>
   {LEAD_FORM_FIELDS.map((field) => (
-    <div>
-      <label for={`lead-${field.name}`}>{field.label}</label>
+    <div class="field">
+      <label class="field__label" for={`lead-${field.name}`}>{field.label}</label>
       <input
+        class="field__input"
         id={`lead-${field.name}`}
         name={field.name}
         type={field.type}
@@ -23,8 +24,8 @@ import { LEAD_FORM_FIELDS, LEAD_HONEYPOT_FIELD } from '../lib/lead-form-fields';
       autocomplete={LEAD_HONEYPOT_FIELD.autocomplete}
     />
   </div>
-  <p id="lead-feedback" role="status" aria-live="polite"></p>
-  <button type="submit">Enviar consulta</button>
+  <p id="lead-feedback" class="lead-form__feedback" role="status" aria-live="polite"></p>
+  <button class="button" type="submit">Enviar consulta</button>
 </form>
 
 <script>
@@ -32,12 +33,29 @@ import { LEAD_FORM_FIELDS, LEAD_HONEYPOT_FIELD } from '../lib/lead-form-fields';
   const feedback = document.querySelector<HTMLElement>('#lead-feedback');
   const button = form?.querySelector<HTMLButtonElement>('button[type="submit"]');
 
+  /**
+   * The feedback state is mirrored on `data-state` so the stylesheet owns the
+   * visual treatment (color, background, padding) instead of the script.
+   */
+  const showFeedback = (state: 'pending' | 'success' | 'error', message: string) => {
+    if (!feedback) return;
+    feedback.dataset.state = state;
+    feedback.textContent = message;
+  };
+
+  const setBusy = (busy: boolean) => {
+    if (!button) return;
+    button.disabled = busy;
+    button.setAttribute('aria-busy', String(busy));
+    button.textContent = busy ? 'Enviando…' : 'Enviar consulta';
+  };
+
   form?.addEventListener('submit', async (event) => {
     event.preventDefault();
     if (!feedback || !button) return;
 
-    button.disabled = true;
-    feedback.textContent = 'Enviando consulta…';
+    setBusy(true);
+    showFeedback('pending', 'Enviando consulta…');
     const formData = new FormData(form);
     const response = await fetch(form.action, {
       method: 'POST',
@@ -45,13 +63,13 @@ import { LEAD_FORM_FIELDS, LEAD_HONEYPOT_FIELD } from '../lib/lead-form-fields';
       body: JSON.stringify(Object.fromEntries(formData)),
     }).catch(() => undefined);
 
-    button.disabled = false;
+    setBusy(false);
     if (response?.ok) {
       form.reset();
-      feedback.textContent = 'Recibimos tu consulta. Te vamos a contactar pronto.';
+      showFeedback('success', 'Recibimos tu consulta. Te vamos a contactar pronto.');
       return;
     }
 
-    feedback.textContent = 'No pudimos enviar tu consulta. Revisá los datos e intentá nuevamente.';
+    showFeedback('error', 'No pudimos enviar tu consulta. Revisá los datos e intentá nuevamente.');
   });
 </script>

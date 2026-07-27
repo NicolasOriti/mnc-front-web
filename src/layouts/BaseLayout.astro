@@ -16,7 +16,9 @@ const structuredData = createStructuredData(canonicalUrl);
 <html lang="es-AR">
   <head>
     <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="color-scheme" content="light" />
+    <meta name="theme-color" content="#0a7a68" />
     <title>{title}</title>
     <meta name="description" content={description} />
     <link rel="canonical" href={canonicalUrl} />
@@ -28,6 +30,7 @@ const structuredData = createStructuredData(canonicalUrl);
     <script is:inline type="application/ld+json" set:html={JSON.stringify(structuredData)}></script>
   </head>
   <body>
+    <a class="skip-link" href="#contenido">Ir al contenido</a>
     <slot />
   </body>
 </html>
