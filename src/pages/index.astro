@@ -1,0 +1,38 @@
+---
+export const prerender = true;
+
+import DemoWorkflow from '../components/DemoWorkflow.astro';
+import Header from '../components/Header.astro';
+import LeadForm from '../components/LeadForm.astro';
+import { getApprovedDemo } from '../content/demo';
+import { getPublicEnvironment } from '../lib/env';
+import BaseLayout from '../layouts/BaseLayout.astro';
+
+const publicEnvironment = getPublicEnvironment(import.meta.env, Astro.url);
+const demo = getApprovedDemo(publicEnvironment.whatsAppReady);
+---
+
+<BaseLayout
+  title="MyNutriCoach | Acompañamiento para nutricionistas"
+  description="Acompañamiento y visibilidad entre consultas para nutricionistas de Argentina."
+  canonicalUrl={publicEnvironment.siteUrl}
+>
+  <Header loginUrl={publicEnvironment.loginUrl?.href} />
+  <main id="contenido">
+    <section class="hero" aria-labelledby="hero-title">
+      <p class="eyebrow">MyNutriCoach para profesionales</p>
+      <h1 id="hero-title">Nutricionistas de Argentina</h1>
+      <p class="hero-copy">Acompañamiento entre consultas, bajo tu criterio profesional.</p>
+      <p>Sumá visibilidad para seguir conversaciones y hábitos sin reemplazar tu mirada clínica.</p>
+      <a class="button" href="#consulta">Solicitar una consulta</a>
+    </section>
+    <DemoWorkflow demo={demo} />
+    <section id="consulta" class="consultation" aria-labelledby="consultation-title">
+      <div class="consultation__copy">
+        <h2 id="consultation-title">Conozcamos tu práctica</h2>
+        <p>Dejanos tus datos y te contactamos para conversar sobre MyNutriCoach.</p>
+      </div>
+      <LeadForm />
+    </section>
+  </main>
+</BaseLayout>

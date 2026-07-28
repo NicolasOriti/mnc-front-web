@@ -1,0 +1,705 @@
+/*
+ * MyNutriCoach public web — design tokens and base styles.
+ *
+ * Single source of visual truth: components only carry class names, every
+ * value (color, type, spacing, radius, shadow, motion) lives here as a token.
+ * No third-party UI framework; primitives are hand written on purpose.
+ *
+ * Color contrast was verified against WCAG 2.1 AA:
+ *   ink #0c2f37 on surface      13.4:1
+ *   body #2f5159 on surface      8.1:1
+ *   muted #55757c on white       4.9:1
+ *   white on brand #0a7a68       5.2:1
+ *   white on brand-strong        7.5:1
+ *   danger #b3261e on white      6.5:1
+ * --color-leaf (4.1:1) is decorative only: it never carries body text.
+ */
+
+:root {
+  color-scheme: light;
+
+  /* --- Color: neutrals and surfaces --- */
+  --color-ink: #0c2f37;
+  --color-body: #2f5159;
+  --color-muted: #55757c;
+  --color-surface: #f5faf8;
+  --color-surface-raised: #ffffff;
+  --color-surface-sunken: #eaf4ef;
+  --color-border: #dceae4;
+  --color-border-strong: #c2d9d1;
+
+  /* --- Color: brand (from the MyNutriCoach logo) --- */
+  --color-brand: #0a7a68;
+  --color-brand-strong: #075f52;
+  --color-brand-soft: #e3f2ec;
+  --color-brand-tint: rgba(10, 122, 104, 0.09);
+  --color-brand-tint-strong: rgba(10, 122, 104, 0.18);
+  --color-deep: #0b4454;
+  --color-leaf: #4f8c2e;
+
+  /* --- Color: feedback --- */
+  --color-danger: #b3261e;
+  --color-danger-soft: #fdecea;
+  --color-success: #0a7a68;
+  --color-success-soft: #e3f2ec;
+
+  /* --- Typography --- */
+  --font-sans:
+    ui-sans-serif, system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', Arial,
+    'Noto Sans', sans-serif;
+  --text-xs: 0.75rem;
+  --text-sm: 0.8125rem;
+  --text-base: 1rem;
+  --text-md: 1.0625rem;
+  --text-lg: clamp(1.05rem, 0.35vw + 0.98rem, 1.2rem);
+  --text-xl: clamp(1.25rem, 0.9vw + 1.05rem, 1.55rem);
+  --text-2xl: clamp(1.6rem, 1.6vw + 1.15rem, 2.15rem);
+  --text-3xl: clamp(2.1rem, 3.4vw + 1.2rem, 3.4rem);
+  --leading-tight: 1.1;
+  --leading-snug: 1.3;
+  --leading-normal: 1.65;
+  --tracking-tight: -0.02em;
+  --tracking-wide: 0.12em;
+  --measure: 42ch;
+
+  /* --- Spacing (4px base scale) --- */
+  --space-2xs: 0.25rem;
+  --space-xs: 0.5rem;
+  --space-sm: 0.75rem;
+  --space-md: 1rem;
+  --space-lg: 1.5rem;
+  --space-xl: 2rem;
+  --space-2xl: 3rem;
+  --space-3xl: 4rem;
+  --space-section: clamp(3rem, 7vw, 5.5rem);
+
+  /* --- Radius --- */
+  --radius-xs: 0.375rem;
+  --radius-sm: 0.625rem;
+  --radius-md: 0.875rem;
+  --radius-lg: 1.25rem;
+  --radius-xl: 1.75rem;
+  --radius-pill: 999rem;
+
+  /* --- Elevation (tinted with the brand hue, kept subtle) --- */
+  --shadow-xs: 0 1px 2px rgba(9, 58, 52, 0.06);
+  --shadow-sm:
+    0 2px 6px -1px rgba(9, 58, 52, 0.08), 0 1px 2px rgba(9, 58, 52, 0.05);
+  --shadow-md:
+    0 14px 30px -14px rgba(9, 58, 52, 0.2), 0 2px 6px -2px rgba(9, 58, 52, 0.08);
+  --shadow-lg:
+    0 34px 60px -30px rgba(9, 58, 52, 0.3), 0 8px 18px -10px rgba(9, 58, 52, 0.12);
+
+  /* --- Motion --- */
+  --duration-fast: 120ms;
+  --duration-base: 200ms;
+  --ease-out: cubic-bezier(0.22, 0.61, 0.36, 1);
+
+  /* --- Layout --- */
+  --content-width: 68rem;
+  --page-gutter: clamp(1.25rem, 4vw, 2.5rem);
+  --header-height: 4.5rem;
+
+  /* --- Focus --- */
+  --focus-ring-width: 3px;
+  --focus-ring-offset: 3px;
+  --color-focus: var(--color-brand-strong);
+
+  /* --- Brand asset --- */
+  --brand-mark-size: 2.75rem;
+  /*
+   * logo.png is a 1254x1254 lockup: mark on top, wordmark below, then the
+   * tagline. The header tile shows the mark only, so the bitmap is scaled up
+   * and offset until the mark's bounding box lands inside the tile.
+   *
+   * Measured ink bounds: the mark band is x 326..905, y 228..757, a 580x530
+   * glyph centered at (49.08%, 39.27%); the wordmark band starts at y=812.
+   * A window centered on the mark therefore cannot exceed 2 * (812 - 492.5)
+   * = 639px without dragging the wordmark into frame, so 640 is the ceiling
+   * and also the roomiest clean crop:
+   *   zoom = 1254 / 640             = 196%
+   *   x    = -(615.5 - 320) / 640   = -46.2% of the tile
+   *   y    = -(492.5 - 320) / 640   = -27%   of the tile
+   * Offsets are absolute rather than centered-plus-transform because an
+   * overflowing grid item is not reliably centered across engines.
+   */
+  --brand-mark-zoom: 196%;
+  --brand-mark-x: -46.2%;
+  --brand-mark-y: -27%;
+}
+
+/* ---------------------------------------------------------------- reset */
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html {
+  scroll-behavior: smooth;
+  scroll-padding-top: calc(var(--header-height) + var(--space-lg));
+  -webkit-text-size-adjust: 100%;
+}
+
+body {
+  margin: 0;
+  min-height: 100vh;
+  color: var(--color-body);
+  background-color: var(--color-surface);
+  background-image:
+    radial-gradient(72rem 34rem at 50% -12rem, var(--color-brand-soft), transparent 70%),
+    radial-gradient(38rem 24rem at 108% 8rem, rgba(79, 140, 46, 0.1), transparent 65%);
+  background-repeat: no-repeat;
+  font-family: var(--font-sans);
+  font-size: var(--text-md);
+  line-height: var(--leading-normal);
+  -webkit-font-smoothing: antialiased;
+}
+
+h1,
+h2,
+h3 {
+  margin: 0;
+  color: var(--color-ink);
+  font-weight: 700;
+  letter-spacing: var(--tracking-tight);
+  line-height: var(--leading-tight);
+  text-wrap: balance;
+}
+
+p {
+  margin: 0;
+  text-wrap: pretty;
+}
+
+img,
+svg {
+  max-width: 100%;
+}
+
+a {
+  color: var(--color-brand-strong);
+  text-decoration-thickness: 1px;
+  text-underline-offset: 0.2em;
+}
+
+::selection {
+  background: var(--color-brand-tint-strong);
+  color: var(--color-ink);
+}
+
+/* ------------------------------------------------------------ a11y base */
+
+:where(a, button, input, select, textarea, summary):focus-visible {
+  outline: var(--focus-ring-width) solid var(--color-focus);
+  outline-offset: var(--focus-ring-offset);
+}
+
+.skip-link {
+  position: absolute;
+  z-index: 20;
+  top: var(--space-xs);
+  left: var(--space-xs);
+  padding: var(--space-xs) var(--space-md);
+  border-radius: var(--radius-sm);
+  background: var(--color-surface-raised);
+  box-shadow: var(--shadow-md);
+  color: var(--color-brand-strong);
+  font-weight: 600;
+  text-decoration: none;
+  transform: translateY(-160%);
+  transition: transform var(--duration-base) var(--ease-out);
+}
+
+.skip-link:focus-visible {
+  transform: translateY(0);
+}
+
+/* --------------------------------------------------------------- layout */
+
+main {
+  display: grid;
+  width: 100%;
+  max-width: var(--content-width);
+  gap: var(--space-section);
+  margin-inline: auto;
+  padding-block: clamp(2rem, 5vw, 3.5rem) var(--space-3xl);
+  padding-inline: var(--page-gutter);
+}
+
+/* --------------------------------------------------------------- header */
+
+/*
+ * The header bleeds full width so the translucent bar spans the viewport;
+ * `.site-header__inner` is the piece that aligns with the main content column.
+ */
+.site-header {
+  position: sticky;
+  z-index: 10;
+  top: 0;
+  border-bottom: 1px solid rgba(12, 47, 55, 0.07);
+  background: rgba(245, 250, 248, 0.82);
+  backdrop-filter: blur(14px) saturate(1.4);
+}
+
+.site-header__inner {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-sm) var(--space-lg);
+  width: 100%;
+  max-width: var(--content-width);
+  min-height: var(--header-height);
+  margin-inline: auto;
+  padding-block: var(--space-xs);
+  padding-inline: var(--page-gutter);
+}
+
+.brand {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-sm);
+  border-radius: var(--radius-md);
+  color: var(--color-deep);
+  text-decoration: none;
+  transition: opacity var(--duration-fast) var(--ease-out);
+}
+
+.brand:hover {
+  opacity: 0.85;
+}
+
+.brand__mark {
+  position: relative;
+  display: block;
+  flex: none;
+  overflow: hidden;
+  width: var(--brand-mark-size);
+  height: var(--brand-mark-size);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+  background: var(--color-surface-raised);
+  box-shadow: var(--shadow-xs);
+}
+
+.brand__mark img {
+  position: absolute;
+  top: var(--brand-mark-y);
+  left: var(--brand-mark-x);
+  width: var(--brand-mark-zoom);
+  max-width: none;
+  height: auto;
+}
+
+.brand__word {
+  font-size: 1.15rem;
+  font-weight: 700;
+  letter-spacing: var(--tracking-tight);
+  line-height: 1;
+}
+
+.brand__word b {
+  color: var(--color-leaf);
+  font-weight: inherit;
+}
+
+.site-nav {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--space-xs);
+}
+
+.site-nav a {
+  display: inline-flex;
+  align-items: center;
+  padding: 0.55rem 1.1rem;
+  border: 1px solid transparent;
+  border-radius: var(--radius-pill);
+  font-size: 0.95rem;
+  font-weight: 600;
+  text-decoration: none;
+  transition:
+    background-color var(--duration-fast) var(--ease-out),
+    border-color var(--duration-fast) var(--ease-out),
+    color var(--duration-fast) var(--ease-out);
+}
+
+.site-nav .cta {
+  border-color: transparent;
+  background: var(--color-brand);
+  color: var(--color-surface-raised);
+  box-shadow: var(--shadow-sm);
+}
+
+.site-nav .cta:hover {
+  background: var(--color-brand-strong);
+}
+
+.site-nav .login {
+  border-color: var(--color-border-strong);
+  color: var(--color-brand-strong);
+}
+
+.site-nav .login:hover {
+  border-color: var(--color-brand);
+  background: var(--color-brand-tint);
+}
+
+/* ----------------------------------------------------------- typography */
+
+.eyebrow {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-xs);
+  padding: 0.35rem 0.85rem;
+  border: 1px solid var(--color-brand-tint-strong);
+  border-radius: var(--radius-pill);
+  background: var(--color-brand-tint);
+  color: var(--color-brand-strong);
+  font-size: var(--text-sm);
+  font-weight: 700;
+  letter-spacing: var(--tracking-wide);
+  line-height: 1.4;
+  text-transform: uppercase;
+}
+
+.eyebrow::before {
+  content: '';
+  width: 0.45rem;
+  height: 0.45rem;
+  border-radius: 50%;
+  background: var(--color-leaf);
+}
+
+/* --------------------------------------------------------------- button */
+
+.button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-xs);
+  padding: 0.9rem 1.75rem;
+  border: none;
+  border-radius: var(--radius-pill);
+  background-image: linear-gradient(135deg, var(--color-brand), var(--color-brand-strong));
+  box-shadow: var(--shadow-md);
+  color: var(--color-surface-raised);
+  font-family: inherit;
+  font-size: var(--text-base);
+  font-weight: 700;
+  letter-spacing: 0.01em;
+  line-height: 1.2;
+  text-decoration: none;
+  cursor: pointer;
+  transition:
+    transform var(--duration-fast) var(--ease-out),
+    box-shadow var(--duration-base) var(--ease-out),
+    filter var(--duration-fast) var(--ease-out);
+}
+
+.button:hover {
+  box-shadow: var(--shadow-lg);
+  filter: saturate(1.08);
+  transform: translateY(-1px);
+}
+
+.button:active {
+  box-shadow: var(--shadow-sm);
+  transform: translateY(0);
+}
+
+.button[disabled] {
+  box-shadow: none;
+  cursor: progress;
+  filter: grayscale(0.35);
+  opacity: 0.65;
+  transform: none;
+}
+
+/* ----------------------------------------------------------------- hero */
+
+.hero {
+  position: relative;
+  overflow: hidden;
+  padding: clamp(2.25rem, 5vw, 4rem);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-xl);
+  background-image: linear-gradient(155deg, #ffffff 0%, #f2faf6 52%, #e7f4ee 100%);
+  box-shadow: var(--shadow-md);
+}
+
+.hero::after {
+  content: '';
+  position: absolute;
+  z-index: 0;
+  right: -8rem;
+  bottom: -12rem;
+  width: 26rem;
+  height: 26rem;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(79, 140, 46, 0.18), transparent 68%);
+  pointer-events: none;
+}
+
+.hero > * {
+  position: relative;
+  z-index: 1;
+  max-width: 34rem;
+}
+
+.hero h1 {
+  margin-block: var(--space-md) var(--space-sm);
+  font-size: var(--text-3xl);
+}
+
+.hero p {
+  max-width: var(--measure);
+  color: var(--color-body);
+}
+
+.hero-copy {
+  color: var(--color-ink);
+  font-size: var(--text-xl);
+  font-weight: 600;
+  line-height: var(--leading-snug);
+}
+
+.hero-copy + p {
+  margin-block-start: var(--space-sm);
+  font-size: var(--text-lg);
+}
+
+.hero .button {
+  margin-block-start: var(--space-xl);
+}
+
+/* -------------------------------------------------------- demo workflow */
+
+.demo-workflow {
+  display: grid;
+  grid-template-columns: minmax(0, 0.95fr) minmax(0, 1.05fr);
+  align-items: center;
+  gap: clamp(var(--space-xl), 5vw, var(--space-3xl));
+}
+
+.demo-workflow__copy {
+  display: grid;
+  justify-items: start;
+  gap: var(--space-sm);
+}
+
+.demo-workflow h2 {
+  font-size: var(--text-2xl);
+}
+
+.demo-workflow__copy p:not(.eyebrow) {
+  max-width: var(--measure);
+  font-size: var(--text-lg);
+}
+
+.demo-workflow__frame {
+  margin: 0;
+  padding: clamp(0.6rem, 1.6vw, 1.1rem);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-lg);
+  background-image: linear-gradient(150deg, #ffffff, #eef7f3);
+  box-shadow: var(--shadow-lg);
+}
+
+.demo-workflow__frame img {
+  display: block;
+  width: 100%;
+  height: auto;
+  border-radius: var(--radius-md);
+  background: var(--color-surface-sunken);
+}
+
+.demo-workflow__placeholder {
+  display: grid;
+  place-items: center;
+  min-height: 14rem;
+  padding: var(--space-xl);
+  border: 1px dashed var(--color-border-strong);
+  border-radius: var(--radius-lg);
+  background: rgba(255, 255, 255, 0.6);
+  color: var(--color-muted);
+  text-align: center;
+}
+
+/* ------------------------------------------------------- consultation */
+
+.consultation {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 25rem);
+  align-items: start;
+  gap: clamp(var(--space-xl), 4vw, var(--space-2xl));
+  padding: clamp(1.75rem, 4vw, 3rem);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-xl);
+  background: var(--color-surface-raised);
+  box-shadow: var(--shadow-md);
+}
+
+/*
+ * The copy is grouped in its own cell on purpose: when the heading and the
+ * paragraph sat directly in the section grid, the taller row-spanning form
+ * stretched the two copy rows and tore the heading away from its paragraph.
+ */
+.consultation__copy {
+  display: grid;
+  gap: var(--space-sm);
+  align-content: center;
+}
+
+.consultation__copy h2 {
+  font-size: var(--text-2xl);
+}
+
+.consultation__copy p {
+  max-width: var(--measure);
+  font-size: var(--text-lg);
+}
+
+/* ------------------------------------------------------------ lead form */
+
+.lead-form {
+  display: grid;
+  gap: var(--space-md);
+  padding: clamp(1.25rem, 3vw, 1.75rem);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-lg);
+  background: var(--color-surface);
+  box-shadow: var(--shadow-xs);
+}
+
+.field {
+  display: grid;
+  gap: var(--space-2xs);
+}
+
+.field__label {
+  color: var(--color-ink);
+  font-size: 0.9rem;
+  font-weight: 600;
+}
+
+.field__input {
+  width: 100%;
+  padding: 0.7rem 0.85rem;
+  border: 1px solid var(--color-border-strong);
+  border-radius: var(--radius-sm);
+  background: var(--color-surface-raised);
+  color: var(--color-ink);
+  font-family: inherit;
+  font-size: var(--text-base);
+  transition:
+    border-color var(--duration-fast) var(--ease-out),
+    box-shadow var(--duration-fast) var(--ease-out);
+}
+
+.field__input:hover {
+  border-color: var(--color-brand);
+}
+
+.field__input:focus {
+  border-color: var(--color-brand);
+  box-shadow: 0 0 0 3px var(--color-brand-tint);
+  outline: none;
+}
+
+.field__input:focus-visible {
+  outline: var(--focus-ring-width) solid var(--color-focus);
+  outline-offset: 1px;
+}
+
+.field__input:user-invalid {
+  border-color: var(--color-danger);
+}
+
+.lead-form__feedback {
+  margin: 0;
+  font-size: 0.95rem;
+  font-weight: 600;
+}
+
+.lead-form__feedback:empty {
+  display: none;
+}
+
+.lead-form__feedback[data-state='pending'] {
+  color: var(--color-muted);
+}
+
+.lead-form__feedback[data-state='success'] {
+  padding: var(--space-sm) var(--space-md);
+  border-radius: var(--radius-sm);
+  background: var(--color-success-soft);
+  color: var(--color-brand-strong);
+}
+
+.lead-form__feedback[data-state='error'] {
+  padding: var(--space-sm) var(--space-md);
+  border-radius: var(--radius-sm);
+  background: var(--color-danger-soft);
+  color: var(--color-danger);
+}
+
+.lead-form .button {
+  width: 100%;
+}
+
+/* ----------------------------------------------------------- responsive */
+
+@media (max-width: 60rem) {
+  .demo-workflow,
+  .consultation {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .demo-workflow__copy {
+    justify-items: start;
+  }
+}
+
+@media (max-width: 30rem) {
+  :root {
+    --brand-mark-size: 2.5rem;
+  }
+
+  .site-nav a {
+    padding-inline: 0.85rem;
+    font-size: 0.9rem;
+  }
+
+  /* A full-bleed primary action reads better than a short pill on a phone. */
+  .hero .button {
+    width: 100%;
+  }
+}
+
+/*
+ * Below this width the wordmark plus the consultation pill stop fitting on a
+ * single header row, so the mark carries the brand on its own.
+ */
+@media (max-width: 26rem) {
+  .brand__word {
+    display: none;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
